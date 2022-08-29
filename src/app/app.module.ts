@@ -1,4 +1,9 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import ptBr from '@angular/common/locales/pt';
+// import { TextMaskModule } from 'angular2-text-mask';
+import { TextMaskModule } from 'angular2-text-mask';
+
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -14,7 +19,9 @@ import { AuthenticationService } from './auth/services/authentication.service';
 import { PainelComponent } from './painel/painel.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { DepartamentoModule } from './departamentos/departamento.module';
+import { EquipamentoModule } from './equipamentos/equipamento.module';
 
+registerLocaleData(ptBr);
 @NgModule({
   declarations: [AppComponent, LoginComponent, PainelComponent, NavbarComponent],
   imports: [
@@ -25,9 +32,12 @@ import { DepartamentoModule } from './departamentos/departamento.module';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFirestoreModule,
-    DepartamentoModule
+    DepartamentoModule,
+    EquipamentoModule,
+    TextMaskModule
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService, { provide: LOCALE_ID, useValue: 'pt' }],
   bootstrap: [AppComponent]
+
 })
 export class AppModule {}

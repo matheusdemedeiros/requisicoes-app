@@ -7,8 +7,7 @@ import { DepartamentoService } from './services/departamento.service';
 
 @Component({
   selector: 'app-departamento',
-  templateUrl: './departamento.component.html',
-  styleUrls: ['./departamento.component.css'],
+  templateUrl: './departamento.component.html'
 })
 export class DepartamentoComponent implements OnInit {
   public departamentos$: Observable<Departamento[]>;
