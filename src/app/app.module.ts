@@ -1,8 +1,8 @@
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import ptBr from '@angular/common/locales/pt';
-// import { TextMaskModule } from 'angular2-text-mask';
-import { TextMaskModule } from 'angular2-text-mask';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -22,6 +22,7 @@ import { DepartamentoModule } from './departamentos/departamento.module';
 import { EquipamentoModule } from './equipamentos/equipamento.module';
 
 registerLocaleData(ptBr);
+
 @NgModule({
   declarations: [AppComponent, LoginComponent, PainelComponent, NavbarComponent],
   imports: [
@@ -34,7 +35,8 @@ registerLocaleData(ptBr);
     AngularFirestoreModule,
     DepartamentoModule,
     EquipamentoModule,
-    TextMaskModule
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [AuthenticationService, { provide: LOCALE_ID, useValue: 'pt' }],
   bootstrap: [AppComponent]

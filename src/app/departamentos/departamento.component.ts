@@ -2,6 +2,7 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
+import { Notificador } from '../shared/notificador.service';
 import { Departamento } from './models/departamento.model';
 import { DepartamentoService } from './services/departamento.service';
 
@@ -16,7 +17,8 @@ export class DepartamentoComponent implements OnInit {
   constructor(
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private notificador:Notificador
   ) {}
 
   ngOnInit(): void {
@@ -57,9 +59,11 @@ export class DepartamentoComponent implements OnInit {
         await this.departamentoService.editar(this.form.value);
       }
       console.log(`O departamento foi salvo com sucesso`);
+      this.notificador.notificacaoSucesso("Cadastro de departamentos", "Departamento cadastrado com sucesso!");
     } catch (_error) {}
   }
   public excluir(registro: Departamento) {
     this.departamentoService.excluir(registro);
+    this.notificador.notificacaoSucesso("Exclusão de departamentos", "Departamento excluído com sucesso!");
   }
 }

@@ -2,6 +2,8 @@ import { Component, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
+import { Notificador } from '../shared/notificador.service';
+
 import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
 
@@ -12,13 +14,12 @@ import { EquipamentoService } from './services/equipamento.service';
 export class EquipamentoComponent implements OnInit {
   public equipamentos$: Observable<Equipamento[]>;
   public form: FormGroup;
-  public myModel = ''
-  public mask = ['(', /[1-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/];
 
   constructor(
     private equipamentoService: EquipamentoService,
     private fb: FormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private notificador: Notificador
   ) {}
 
   ngOnInit(): void {
@@ -65,9 +66,22 @@ export class EquipamentoComponent implements OnInit {
         await this.equipamentoService.editar(this.form.value);
       }
       console.log(`O equipamento foi salvo com sucesso`);
-    } catch (_error) {}
+      this.notificador.notificacaoSucesso(
+        'Cadastro de equipamentos',
+        'Equipamento cadastrado com sucesso!'
+      );
+    } catch (_error) {
+      this.notificador.notificacaoErro(
+        'Cadastro de equipamentos',
+        'Erro ao cadastrar equipamento!'
+      );
+    }
   }
   public excluir(registro: Equipamento) {
     this.equipamentoService.excluir(registro);
+    this.notificador.notificacaoSucesso(
+      'Exclusão de equipamentos',
+      'Equipamento excluído com sucesso!'
+    );
   }
 }
