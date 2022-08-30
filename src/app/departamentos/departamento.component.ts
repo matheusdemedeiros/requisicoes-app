@@ -8,7 +8,7 @@ import { DepartamentoService } from './services/departamento.service';
 
 @Component({
   selector: 'app-departamento',
-  templateUrl: './departamento.component.html'
+  templateUrl: './departamento.component.html',
 })
 export class DepartamentoComponent implements OnInit {
   public departamentos$: Observable<Departamento[]>;
@@ -18,7 +18,7 @@ export class DepartamentoComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private fb: FormBuilder,
     private modalService: NgbModal,
-    private notificador:Notificador
+    private notificador: Notificador
   ) {}
 
   ngOnInit(): void {
@@ -59,11 +59,24 @@ export class DepartamentoComponent implements OnInit {
         await this.departamentoService.editar(this.form.value);
       }
       console.log(`O departamento foi salvo com sucesso`);
-      this.notificador.notificacaoSucesso("Cadastro de departamentos", "Departamento cadastrado com sucesso!");
-    } catch (_error) {}
+      this.notificador.notificacaoSucesso(
+        'Cadastro de departamentos',
+        'Departamento cadastrado com sucesso!'
+      );
+    } catch (error) {
+      if (error !== 'fechar') {
+        this.notificador.notificacaoErro(
+          'Cadastro de departamentos',
+          'Erro ao  cadastrar departamento!'
+        );
+      }
+    }
   }
   public excluir(registro: Departamento) {
     this.departamentoService.excluir(registro);
-    this.notificador.notificacaoSucesso("Exclusão de departamentos", "Departamento excluído com sucesso!");
+    this.notificador.notificacaoSucesso(
+      'Exclusão de departamentos',
+      'Departamento excluído com sucesso!'
+    );
   }
 }

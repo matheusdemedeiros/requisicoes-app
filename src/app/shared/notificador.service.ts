@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 
-@Injectable(
-  {providedIn:"root"}
-)
+@Injectable({ providedIn: 'root' })
 export class Notificador {
   constructor(private toastr: ToastrService) {}
 

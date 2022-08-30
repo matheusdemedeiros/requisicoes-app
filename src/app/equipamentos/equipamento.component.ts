@@ -70,11 +70,13 @@ export class EquipamentoComponent implements OnInit {
         'Cadastro de equipamentos',
         'Equipamento cadastrado com sucesso!'
       );
-    } catch (_error) {
-      this.notificador.notificacaoErro(
-        'Cadastro de equipamentos',
-        'Erro ao cadastrar equipamento!'
-      );
+    } catch (error) {
+      if (error !== 'fechar') {
+        this.notificador.notificacaoErro(
+          'Cadastro de equipamentos',
+          'Erro ao cadastrar equipamento!'
+        );
+      }
     }
   }
   public excluir(registro: Equipamento) {
