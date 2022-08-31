@@ -71,7 +71,8 @@ export class EquipamentoComponent implements OnInit {
         'Equipamento cadastrado com sucesso!'
       );
     } catch (error) {
-      if (error !== 'fechar') {
+      console.log(error);
+      if (error !== 0 && error !== 'fechar' && error !== 1) {
         this.notificador.notificacaoErro(
           'Cadastro de equipamentos',
           'Erro ao cadastrar equipamento!'
@@ -79,11 +80,18 @@ export class EquipamentoComponent implements OnInit {
       }
     }
   }
-  public excluir(registro: Equipamento) {
-    this.equipamentoService.excluir(registro);
-    this.notificador.notificacaoSucesso(
-      'Exclusão de equipamentos',
-      'Equipamento excluído com sucesso!'
-    );
+  public async excluir(registro: Equipamento) {
+    try {
+      await this.equipamentoService.excluir(registro);
+      this.notificador.notificacaoSucesso(
+        'Exclusão de equipamentos',
+        'Equipamento excluído com sucesso!'
+      );
+    } catch (error) {
+      this.notificador.notificacaoErro(
+        'Exclusão de equipamentos',
+        'Erro ao excluir o equipamento!'
+      );
+    }
   }
 }

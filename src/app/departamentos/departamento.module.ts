@@ -6,16 +6,13 @@ import { DepartamentoComponent } from './departamento.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-
 @NgModule({
-  declarations: [
-    DepartamentoComponent
-  ],
+  declarations: [DepartamentoComponent],
   imports: [
     CommonModule,
     NgbModule,
     DepartamentoRoutingModule,
-    ReactiveFormsModule
-  ]
+    ReactiveFormsModule,
+  ],
 })
-export class DepartamentoModule { }
+export class DepartamentoModule {}

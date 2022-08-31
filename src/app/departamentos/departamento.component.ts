@@ -64,7 +64,7 @@ export class DepartamentoComponent implements OnInit {
         'Departamento cadastrado com sucesso!'
       );
     } catch (error) {
-      if (error !== 'fechar') {
+      if (error !== 0 && error !== 'fechar' && error !== 1) {
         this.notificador.notificacaoErro(
           'Cadastro de departamentos',
           'Erro ao  cadastrar departamento!'
@@ -72,11 +72,19 @@ export class DepartamentoComponent implements OnInit {
       }
     }
   }
-  public excluir(registro: Departamento) {
-    this.departamentoService.excluir(registro);
-    this.notificador.notificacaoSucesso(
-      'Exclusão de departamentos',
-      'Departamento excluído com sucesso!'
-    );
+
+  public async excluir(registro: Departamento) {
+    try {
+      await this.departamentoService.excluir(registro);
+      this.notificador.notificacaoSucesso(
+        'Exclusão de departamentos',
+        'Departamento excluído com sucesso!'
+      );
+    } catch (error) {
+      this.notificador.notificacaoErro(
+        'Exclusão de equipamentos',
+        'Erro ao excluir o departamento!'
+      );
+    }
   }
 }

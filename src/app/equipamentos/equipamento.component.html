@@ -35,7 +35,7 @@
             <tr *ngFor="let equipamento of equipamentos$ | async">
               <td>{{ equipamento.numeroSerie }}</td>
               <td>{{ equipamento.nome }}</td>
-              <td>{{ equipamento.precoAquisicao | currency: "BRL" }}</td>
+              <td>{{ equipamento.precoAquisicao | currency }}</td>
               <td>{{ equipamento.dataFabricacao | date: "dd/MM/yyyy" }}</td>
               <td class="d-grid d-md-block">
                 <button
@@ -92,13 +92,20 @@
         <label for="precoAquisicao" class="form-label"
           >Preço de Aquisição</label
         >
-
         <input
           formControlName="precoAquisicao"
           class="form-control"
           type="text"
           placeholder="R$ 0,00"
-          ng-model="number" ui-number-mask="3"
+          ng-model="number"
+          ui-number-mask="3"
+          currencyMask
+          [options]="{
+            prefix: 'R$ ',
+            thousands: '.',
+            decimal: ',',
+            align: 'left'
+          }"
         />
       </div>
       <div class="form-group mb-3">
