@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Notificador } from 'src/app/shared/notificador.service';
 import { AuthenticationService } from '../services/authentication.service';
 
 @Component({
@@ -22,7 +23,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthenticationService,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private notificador: Notificador
   ) {}
 
   ngOnInit(): void {
@@ -57,6 +59,7 @@ export class LoginComponent implements OnInit {
       }
     } catch (error) {
       console.log(error);
+      this.notificador.notificacaoErro('', 'Usuário não encontrado!');
     }
   }
 
@@ -65,7 +68,7 @@ export class LoginComponent implements OnInit {
       .open(modal)
       .result.then((resultado) => {
         if (resultado === 'enviar') {
-          this.authService.resetarsenha(this.emailRecuperacao?.value) ;
+          this.authService.resetarsenha(this.emailRecuperacao?.value);
         }
       })
       .catch(() => {

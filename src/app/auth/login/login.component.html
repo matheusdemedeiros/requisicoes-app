@@ -8,6 +8,7 @@
             class="col-md-8 mx-auto"
             [formGroup]="form"
             (ngSubmit)="login()"
+            ngNativeValidate
           >
             <div class="form-group mt-5">
               <label for="email" class="form-label fs-5">Email</label>
@@ -16,18 +17,20 @@
                 class="form-control"
                 type="email"
                 placeholder="Digite seu endereço de email"
-              />
-            </div>
+                required
+                />
+              </div>
 
-            <div class="form-group my-5">
-              <label for="senha" class="form-label fs-5">Senha</label>
-              <input
+              <div class="form-group my-5">
+                <label for="senha" class="form-label fs-5">Senha</label>
+                <input
                 formControlName="senha"
                 class="form-control"
                 type="password"
                 placeholder="Digite sua senha"
-              />
-            </div>
+                 required
+                />
+              </div>
 
             <a
               (click)="abrirModalRecuperacao(content)"

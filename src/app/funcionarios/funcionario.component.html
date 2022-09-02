@@ -2,21 +2,21 @@
   <div class="row">
     <div class="col-12 col-md-10 col-lg-9 mx-auto">
       <div class="text-center text-md-start">
-        <h1 class="fw-bold text-primary">Departamentos</h1>
+        <h1 class="fw-bold text-primary">Funcionários</h1>
         <div class="d-grid gap-2 d-md-block mt-4">
           <button
             (click)="gravar(modal)"
             type="button"
             class="btn btn-primary me-md-1 col-md-2"
           >
-            <i class="pi pi-user-plus me-2"> </i>Novo
+            <i class="pi pi-tag me-2"></i>Novo
           </button>
           <a
             role="button"
             class="btn btn-outline-primary col-md-2"
             routerLink="/painel"
           >
-            <i class="pi pi-sign-out me-2"> </i>Voltar
+            <i class="pi pi pi-sign-out me-2"></i>Voltar
           </a>
         </div>
       </div>
@@ -25,28 +25,32 @@
           <thead class="thead-dark text-center">
             <tr>
               <th>Nome</th>
-              <th>Telefone</th>
+              <th>Email</th>
+              <th>Função</th>
+              <th>Departamento</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody class="text-center">
-            <tr *ngFor="let departamento of departamentos$ | async">
-              <td>{{ departamento.nome }}</td>
-              <td>{{ departamento.telefone }}</td>
+            <tr *ngFor="let funcionario of funcionarios$ | async">
+              <td>{{ funcionario.nome }}</td>
+              <td>{{ funcionario.email }}</td>
+              <td>{{ funcionario.funcao }}</td>
+              <td>{{ funcionario.departamento?.nome }}</td>
               <td class="d-grid d-md-block">
                 <button
-                  (click)="gravar(modal, departamento)"
+                  (click)="gravar(modal, funcionario)"
                   type="button"
                   class="btn btn-primary me-0 me-md-1 mb-md-auto"
                 >
-                  <i class="pi pi-user-edit"> </i>
+                  <i class="pi pi-pencil"></i>
                 </button>
                 <button
-                  (click)="excluir(departamento)"
+                  (click)="excluir(funcionario)"
                   type="button"
                   class="btn btn-outline-danger"
                 >
-                  <i class="pi pi-trash"> </i>
+                  <i class="pi pi-trash"></i>
                 </button>
               </td>
             </tr>
@@ -60,7 +64,7 @@
 <ng-template #modal let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">
-      {{ tituloModal }} de Departamento
+      {{ tituloModal }} de Funcionário
     </h4>
     <button
       type="button"
@@ -72,25 +76,42 @@
   <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
     <div class="modal-body">
       <div class="form-group mb-3">
-        <label for="nome" class="form-label">Nome do Departamento</label>
+        <label for="nome" class="form-label">Nome</label>
         <input
           formControlName="nome"
           class="form-control"
           type="text"
-          placeholder="Digite o nome do seu departamento"
+          placeholder="Digite o nome do Funcionário"
         />
       </div>
       <div class="form-group mb-3">
-        <label for="telefone" class="form-label"
-          >Telefone do Departamento</label
-        >
+        <label for="email" class="form-label">Email</label>
         <input
-          formControlName="telefone"
+          formControlName="email"
           class="form-control"
           type="text"
-          placeholder="Digite o número de telefone do seu departamento"
-
+          placeholder="Digite o email do funcionário"
         />
+      </div>
+      <div class="form-group mb-3">
+        <label for="funcao" class="form-label">Função</label>
+        <input
+          formControlName="funcao"
+          class="form-control"
+          type="text"
+          placeholder="Digite a função do funcionário"
+        />
+      </div>
+      <div class="form-group mb-3">
+        <label for="departamentoId" class="form-label">Departamento</label>
+        <ng-select formControlName="departamentoId" [clearable]="false" [searchable]="false">
+          <ng-option
+            *ngFor="let departamento of departamentos$ | async"
+            [value]="departamento.id"
+          >
+            {{ departamento.nome }}
+          </ng-option>
+        </ng-select>
       </div>
     </div>
     <div class="modal-footer">
