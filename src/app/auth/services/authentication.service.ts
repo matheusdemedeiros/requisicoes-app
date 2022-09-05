@@ -20,11 +20,27 @@ export class AuthenticationService {
     return this.auth.signInWithEmailAndPassword(email, senha);
   }
 
-  public logout():Promise<void>{
+  public logout(): Promise<void> {
     return this.auth.signOut();
   }
 
   public resetarsenha(email: string): Promise<void> {
     return this.auth.sendPasswordResetEmail(email);
   }
+
+  public cadastrar(
+    email: string,
+    senha: string
+  ): Promise<firebase.auth.UserCredential> {
+    return this.auth.createUserWithEmailAndPassword(email, senha);
+  }
+
+  public getUsuario():Promise<firebase.User | null>{
+    return this.auth.currentUser;
+  }
+
+  public atualizarUsuario(usuario:firebase.User | null){
+    return this.auth.updateCurrentUser(usuario);
+  }
+
 }
