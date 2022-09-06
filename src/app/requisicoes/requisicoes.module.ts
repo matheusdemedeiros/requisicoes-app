@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RequisicoesRoutingModule } from './requisicoes-routing.module';
 import { RequisicaoComponent } from './requisicao.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
@@ -13,7 +14,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   imports: [
     CommonModule,
     RequisicoesRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    NgSelectModule
   ]
 })
 export class RequisicoesModule { }

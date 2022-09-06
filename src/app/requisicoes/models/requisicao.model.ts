@@ -5,9 +5,9 @@ import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 export class Requisicao {
   id: string;
   descricao: string;
-  funcionario: Funcionario;
+  funcionario?: Funcionario;
   funcionarioId: string;
-  departamentoDestino: Departamento;
+  departamentoDestino?: Departamento;
   departamentoDestinoId: string;
   dataAbertura: Date;
   dataUltimaModificacao: Date;
