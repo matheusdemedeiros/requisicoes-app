@@ -33,6 +33,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'requisicoesFuncionario',
+    loadChildren: () =>
+      import('./requisicoes/requisicoes.module').then(
+        (m) => m.RequisicoesModule
+      ),
+    canActivate: [AuthGuard],
+  },
 ];
 
 @NgModule({

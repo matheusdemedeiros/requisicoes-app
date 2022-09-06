@@ -1,0 +1,201 @@
+<div class="container">
+  <div class="row">
+    <div class="col-12 col-md-10 col-lg-9 mx-auto">
+      <div class="text-center text-md-start">
+        <h1 class="fw-bold text-primary">Minhas requisições</h1>
+        <div class="d-grid gap-2 d-md-block mt-4">
+          <!-- (click)="gravar(modal)" dentro do button -->
+          <button
+            type="button"
+            class="btn btn-primary me-md-1 col-md-2"
+          >
+            <i class="pi pi-tag me-2"></i >Novo
+          </button>
+          <a
+            role="button"
+            class="btn btn-outline-primary col-md-2"
+            routerLink="/painel"
+          >
+            <i class="pi pi pi-sign-out me-2"></i>Voltar
+          </a>
+        </div>
+      </div>
+      <div class="mt-4">
+        <table class="table table-light table-striped table-hover">
+          <thead class="thead-dark text-center">
+            <tr>
+              <th>Abertura</th>
+              <th>Departamento</th>
+              <th>Descrição</th>
+              <th>Equipamento</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody class="text-center">
+            <tr *ngFor="let requisicao of requisicoes$ | async">
+              <td>{{ requisicao.dataAbertura }}</td>
+              <td>{{ requisicao.departamentoDestino?.nome }}</td>
+              <td>{{ requisicao.descricao }}</td>
+              <td>{{ requisicao.funcionario?.nome }}</td>
+              <td class="d-grid d-md-block">
+                <!-- (click)="gravar(modal, funcionario)" dentro do button -->
+                <button
+                  type="button"
+                  class="btn btn-primary me-0 me-md-1 mb-md-auto"
+                >
+                  <i class="pi pi-pencil"></i>
+                </button>
+                <!-- (click)="excluir(funcionario)" dentro do button -->
+                <button
+                  type="button"
+                  class="btn btn-outline-danger"
+                >
+                  <i class="pi pi-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <ng-template #modal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{ tituloModal }} de Requisição
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('fechar')"
+    ></button>
+  </div>
+  <form [formGroup]="form" (ngSubmit)="modal.close('gravar')">
+    <div class="modal-body">
+      <div formGroupName="funcionario">
+        <div class="form-group mb-3 position-relative">
+          <label for="nome" class="form-label">Nome</label>
+          <input
+            [ngClass]="nome?.touched && nome?.invalid ? 'is-invalid' : ''"
+            formControlName="nome"
+            class="form-control"
+            type="text"
+            placeholder="Digite o nome do Funcionário"
+          />
+          <div class="invalid-tooltip" *ngIf="nome?.touched && nome?.invalid">
+            <span *ngIf="nome?.errors?.['required']"
+              >O nome precisa ser preenchido.</span
+            >
+            <span *ngIf="nome?.errors?.['minlength']"
+              >O nome precisa ter no mínimo 3 letras.</span
+            >
+          </div>
+        </div>
+        <div class="form-group mb-3 position-relative">
+          <label for="email" class="form-label">Email</label>
+          <input
+            [ngClass]="email?.touched && email?.invalid ? 'is-invalid' : ''"
+            formControlName="email"
+            class="form-control"
+            type="text"
+            placeholder="Digite o email do funcionário"
+          />
+          <div class="invalid-tooltip" *ngIf="email?.touched && email?.invalid">
+            <span *ngIf="email?.errors?.['required']"
+              >O email precisa ser preenchido.</span
+            >
+            <span *ngIf="email?.errors?.['email']"
+              >O email precisa estar em um formato válido.</span
+            >
+          </div>
+        </div>
+        <div class="form-group mb-3 position-relative">
+          <label for="funcao" class="form-label">Função</label>
+          <input
+            [ngClass]="funcao?.touched && funcao?.invalid ? 'is-invalid' : ''"
+            formControlName="funcao"
+            class="form-control"
+            type="text"
+            placeholder="Digite a função do funcionário"
+          />
+          <div
+            class="invalid-tooltip"
+            *ngIf="funcao?.touched && funcao?.invalid"
+          >
+            <span *ngIf="funcao?.errors?.['required']"
+              >A funcao precisa ser preenchida.</span
+            >
+            <span *ngIf="funcao?.errors?.['minlength']"
+              >A funcao precisa ter no mínimo 3 letras.</span
+            >
+          </div>
+        </div>
+        <div class="form-group mb-3 position-relative">
+          <label for="departamentoId" class="form-label">Departamento</label>
+          <ng-select
+            [ngClass]="
+              departamentoId?.touched && departamentoId?.invalid
+                ? 'is-invalid'
+                : ''
+            "
+            formControlName="departamentoId"
+            [clearable]="false"
+            [searchable]="false"
+          >
+            <ng-option
+              *ngFor="let departamento of departamentos$ | async"
+              [value]="departamento.id"
+            >
+              {{ departamento.nome }}
+            </ng-option>
+          </ng-select>
+          <div
+            class="invalid-tooltip"
+            *ngIf="departamentoId?.touched && departamentoId?.invalid"
+          >
+            <span *ngIf="departamentoId?.errors?.['required']"
+              >O departamento precisa ser selecionado.</span
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group mb-3 position-relative" *ngIf="!this.id?.value">
+        <label for="senha" class="form-label">Senha</label>
+        <input
+          formControlName="senha"
+          class="form-control"
+          type="password"
+          placeholder="Digite a senha do Funcionário"
+        />
+        <!-- <div class="invalid-tooltip" *ngIf="senha?.touched && senha?.invalid">
+            <span *ngIf="senha?.errors?.['required']"
+              >A senha precisa ser preenchido.</span
+            >
+            <span *ngIf="senha?.errors?.['minlength']"
+              >A senha precisa ter no mínimo 3 letras.</span
+            >
+          </div> -->
+      <!-- </div>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-primary col-md-3"
+        (click)="modal.dismiss('fechar')"
+      >
+        Cancelar
+      </button>
+      <button
+        type="submit"
+        class="btn btn-primary col-md-3"
+        [disabled]="this.form.invalid"
+      >
+        Gravar
+      </button>
+    </div>
+  </form> -->
+<!-- </ng-template> --> -->
