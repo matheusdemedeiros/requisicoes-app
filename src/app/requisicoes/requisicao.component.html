@@ -25,14 +25,16 @@
               <th>Departamento</th>
               <th>Descrição</th>
               <th>Equipamento</th>
+              <th>Funcionário</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody class="text-center">
             <tr *ngFor="let requisicao of requisicoes$ | async">
-              <td>{{ requisicao.dataAbertura }}</td>
-              <td>{{ requisicao.departamentoDestino?.nome }}</td>
+              <td>{{ requisicao.dataAbertura | date:"dd/MM/yyyy"}}</td>
+              <td>{{ requisicao.departamento?.nome }}</td>
               <td>{{ requisicao.descricao }}</td>
+              <td>{{ requisicao.equipamento?.nome }}</td>
               <td>{{ requisicao.funcionario?.nome }}</td>
               <td class="d-grid d-md-block">
                 <button
@@ -42,8 +44,8 @@
                 >
                   <i class="pi pi-pencil"></i>
                 </button>
-                <!-- (click)="excluir(funcionario)" dentro do button -->
-                <button type="button" class="btn btn-outline-danger">
+                <button type="button" class="btn btn-outline-danger"
+                  (click)="excluir(requisicao)">
                   <i class="pi pi-trash"></i>
                 </button>
               </td>

@@ -8,7 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AuthenticationService } from '../auth/services/authentication.service';
 import { Departamento } from '../departamentos/models/departamento.model';
 import { DepartamentoService } from '../departamentos/services/departamento.service';
@@ -31,6 +31,7 @@ export class RequisicaoComponent implements OnInit {
   public equipamentos$: Observable<Equipamento[]>;
   public funcionarios$: Observable<Funcionario[]>;
   public form: FormGroup;
+  public funcionarioLogado: Funcionario;
 
   constructor(
     private fb: FormBuilder,
@@ -39,12 +40,15 @@ export class RequisicaoComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private equipamentoService: EquipamentoService,
     private funcionarioService: FuncionarioService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private authService: AuthenticationService
   ) {}
 
   ngOnInit(): void {
+    this.obterFuncionarioLogado();
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
+
     this.form = this.fb.group({
       id: new FormControl(''),
       departamentoId: new FormControl('', Validators.required),
@@ -55,6 +59,9 @@ export class RequisicaoComponent implements OnInit {
       ]),
       equipamentoId: new FormControl(''),
       equipamento: new FormControl(''),
+      dataAbertura: new FormControl(''),
+      funcionario: new FormControl(''),
+      funcionarioId: new FormControl(''),
     });
   }
 
@@ -80,54 +87,81 @@ export class RequisicaoComponent implements OnInit {
   public async gravar(modal: TemplateRef<any>, requisicao?: Requisicao) {
     this.form.reset();
     if (requisicao) {
-      const departamento = requisicao.departamentoDestino
-        ? requisicao.departamentoDestino
+      const departamento = requisicao.departamento
+        ? requisicao.departamento
         : null;
       const equipamento = requisicao.equipamento
         ? requisicao.equipamento
+        : null;
+      const funcionario = requisicao.funcionario
+        ? requisicao.funcionario
         : null;
 
       const requisicaoCompleta = {
         ...requisicao,
         departamento,
         equipamento,
+        funcionario
       };
 
-      this.form.get('requisicao')?.setValue(requisicaoCompleta);
+      this.form.setValue(requisicaoCompleta);
     }
 
     try {
       await this.modalService.open(modal).result;
 
-      if (this.form.dirty && this.form.valid) {
-        if (!requisicao) {
-          await this.requisicaoService.inserir(
-            this.form.get('requisicao')?.value
-          );
-        } else {
-          await this.requisicaoService.editar(
-            this.form.get('requisicao')?.value
-          );
-        }
-        console.log(`A requisição foi salva com sucesso`);
-        this.notificador.notificacaoSucesso(
-          'Cadastro de requisições',
-          'Requisição cadastrada com sucesso!'
-        );
+      if (!requisicao) {
+
+        await this.requisicaoService.inserir(this.form.value, this.funcionarioLogado);
       } else {
-        this.notificador.notificacaoErro(
-          'Cadastro de requisições',
-          'O formulário precisa ser preenchido corretamente!'
-        );
+        await this.requisicaoService.editar(this.form.value);
       }
+
+      console.log(`A requisição foi salva com sucesso`);
+      this.notificador.notificacaoSucesso(
+        'Cadastro de requisições',
+        'Requisição cadastrada com sucesso!'
+      );
     } catch (error) {
       console.log(error);
-      if (error !== 0 && error !== 'fechar' && error !== 1) {
+      if (error !== 0 && error !== 'fechar' && error !== 1 ) {
         this.notificador.notificacaoErro(
           'Cadastro de requisições',
           'Erro ao cadastrar Requisição!'
         );
       }
     }
+  }
+
+  public async excluir(registro: Requisicao) {
+    try {
+      await this.requisicaoService.excluir(registro);
+      this.notificador.notificacaoSucesso(
+        'Exclusão de requisição',
+        'Requisição excluída com sucesso!'
+      );
+    } catch (error) {
+      this.notificador.notificacaoErro(
+        'Exclusão de Requisições',
+        'Erro ao excluir o Requisição!'
+      );
+    }
+  }
+
+  public obterFuncionarioLogado() {
+    this.authService.usuarioLogado.subscribe((dados) => {
+      this.funcionarioService
+        .selecionarFuncionarioLogado(dados!.email!)
+        .subscribe((funcionario) => {
+          this.funcionarioLogado = funcionario;
+          this.requisicoes$ = this.requisicaoService.selecionarTodos().pipe(
+            map((requisicoes) => {
+              return requisicoes.filter(
+                (r) => r.funcionario.email === this.funcionarioLogado.email
+              );
+            })
+          );
+        });
+    });
   }
 }

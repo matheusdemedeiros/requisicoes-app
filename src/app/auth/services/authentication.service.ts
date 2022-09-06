@@ -35,12 +35,11 @@ export class AuthenticationService {
     return this.auth.createUserWithEmailAndPassword(email, senha);
   }
 
-  public getUsuario():Promise<firebase.User | null>{
+  public getUsuario(): Promise<firebase.User | null> {
     return this.auth.currentUser;
   }
 
-  public atualizarUsuario(usuario:firebase.User | null){
+  public atualizarUsuario(usuario: firebase.User | null) {
     return this.auth.updateCurrentUser(usuario);
   }
-
 }

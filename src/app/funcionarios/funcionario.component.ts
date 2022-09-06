@@ -32,7 +32,6 @@ export class FuncionarioComponent implements OnInit {
     private departamentoService: DepartamentoService,
     private modalService: NgbModal,
     private authService: AuthenticationService,
-    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -103,7 +102,6 @@ export class FuncionarioComponent implements OnInit {
       if (this.form.dirty && this.form.valid) {
         if (!funcionario) {
           let usuarioAtual = this.authService.getUsuario();
-
           await this.authService.cadastrar(
             this.email?.value,
             this.senha?.value

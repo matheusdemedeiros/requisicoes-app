@@ -16,11 +16,18 @@ export class RequisicaoService {
   private registros: AngularFirestoreCollection<Requisicao>;
 
   constructor(private firestore: AngularFirestore) {
-    this.registros = this.firestore.collection<Requisicao>('Requisicaos');
+    this.registros = this.firestore.collection<Requisicao>('requisicoes');
   }
 
-  public async inserir(registro: Requisicao): Promise<any> {
+  public async inserir(
+    registro: Requisicao,
+    funcionario: Funcionario
+  ): Promise<any> {
     if (!registro) return Promise.reject('Item inválido');
+
+    registro.dataAbertura = new Date().toString();
+    registro.funcionarioId = funcionario.id;
+    registro.funcionario = funcionario;
 
     const res = await this.registros.add(registro);
 
@@ -40,25 +47,27 @@ export class RequisicaoService {
     return this.registros.valueChanges().pipe(
       map((requisicoes: Requisicao[]) => {
         requisicoes.forEach((requisicao) => {
-          this.firestore
-            .collection<Departamento>('departamentos')
-            .doc(requisicao.departamentoDestinoId)
-            .valueChanges()
-            .subscribe((x) => (requisicao.departamentoDestino = x));
-        });
-        requisicoes.forEach((requisicao) => {
-          this.firestore
-            .collection<Funcionario>('funcionarios')
-            .doc(requisicao.funcionarioId)
-            .valueChanges()
-            .subscribe((x) => (requisicao.funcionario = x));
-        });
-        requisicoes.forEach((requisicao) => {
-          this.firestore
-            .collection<Equipamento>('equipamentos')
-            .doc(requisicao.equipamentoId)
-            .valueChanges()
-            .subscribe((x) => (requisicao.equipamento = x));
+          if (requisicao.departamentoId !== null) {
+            this.firestore
+              .collection<Departamento>('departamentos')
+              .doc(requisicao.departamentoId)
+              .valueChanges()
+              .subscribe((x) => (requisicao.departamento = x));
+          }
+          if (requisicao.equipamentoId !== null) {
+            this.firestore
+              .collection<Equipamento>('equipamentos')
+              .doc(requisicao.equipamentoId)
+              .valueChanges()
+              .subscribe((x) => (requisicao.equipamento = x));
+          }
+          // if (requisicao.funcionarioId !== null) {
+          //   this.firestore
+          //     .collection<Funcionario>('funcionario')
+          //     .doc(requisicao.funcionarioId)
+          //     .valueChanges()
+          //     .subscribe((x) => (requisicao.funcionario = x));
+          // }
         });
         return requisicoes;
       })
