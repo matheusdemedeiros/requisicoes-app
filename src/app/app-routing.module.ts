@@ -34,7 +34,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'requisicoesFuncionario',
+    path: 'requisicoes',
     loadChildren: () =>
       import('./requisicoes/requisicoes.module').then(
         (m) => m.RequisicoesModule
