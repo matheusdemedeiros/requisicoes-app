@@ -46,6 +46,7 @@ export class ResuisicoesFuncionarioComponent implements OnInit {
   ngOnInit(): void {
     this.qtdRequisicoesFuncionario = 0;
     this.obterFuncionarioLogado();
+    this.requisicoes$ = this.requisicaoService.selecionarTodos();
     this.departamentos$ = this.departamentoService.selecionarTodos();
     this.equipamentos$ = this.equipamentoService.selecionarTodos();
 
@@ -167,15 +168,15 @@ export class ResuisicoesFuncionarioComponent implements OnInit {
         .selecionarFuncionarioLogado(dados!.email!)
         .subscribe((funcionario) => {
           this.funcionarioLogado = funcionario;
-          this.requisicoes$ = this.requisicaoService.selecionarTodos().pipe(
-            map((requisicoes) => {
-              let requisicoesFuncionario = requisicoes.filter(
-                (r) => r.funcionario.email === this.funcionarioLogado.email
-              );
-              this.qtdRequisicoesFuncionario = requisicoesFuncionario?.length;
-              return requisicoesFuncionario;
-            })
-          );
+          // this.requisicoes$ = this.requisicaoService.selecionarTodos().pipe(
+          //   map((requisicoes) => {
+          //     let requisicoesFuncionario = requisicoes.filter(
+          //       (r) => r.funcionario.email === this.funcionarioLogado.email
+          //     );
+          //     this.qtdRequisicoesFuncionario = requisicoesFuncionario?.length;
+          //     return requisicoesFuncionario;
+          //   })
+          // );
         });
     });
   }

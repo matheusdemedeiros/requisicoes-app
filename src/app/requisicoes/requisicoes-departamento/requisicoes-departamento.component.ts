@@ -63,10 +63,13 @@ export class RequisicoesDepartamentoComponent implements OnInit, OnDestroy {
                 this.departamentoAtual = dep;
               });
 
-            this.requisicoes$ =
-              this.requisicaoService.selecionarRequisicoesPorDepartamentoId(
-                funcionario.departamentoId
-              );
+            //implementação feita pelo service
+            // this.requisicoes$ =
+            //   this.requisicaoService.selecionarRequisicoesPorDepartamentoId(
+            //     funcionario.departamentoId
+            //   );
+            //implementação feita com a utilização do pipe
+            this.requisicoes$ = this.requisicaoService.selecionarTodos();
           });
       }
     );
