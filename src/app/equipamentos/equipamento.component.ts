@@ -1,8 +1,9 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { Notificador } from '../shared/notificador.service';
+import { dataFuturaValidator } from '../shared/validators/data-futura.validator';
 
 import { Equipamento } from './models/equipamento.model';
 import { EquipamentoService } from './services/equipamento.service';
@@ -29,7 +30,7 @@ export class EquipamentoComponent implements OnInit {
       numeroSerie: new FormControl(''),
       nome: new FormControl(''),
       precoAquisicao: new FormControl(''),
-      dataFabricacao: new FormControl(''),
+      dataFabricacao: new FormControl('',[Validators.required, dataFuturaValidator()]),
     });
   }
   get id() {

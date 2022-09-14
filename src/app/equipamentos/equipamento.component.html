@@ -118,6 +118,11 @@
           type="date"
           placeholder="ajustar aqui"
         />
+      <div class="invalid-tooltip" *ngIf="dataFabricacao?.touched && dataFabricacao?.invalid">
+        <span *ngIf="dataFabricacao?.errors?.['required']">A data de fabricação é obrigatória.</span>
+        <span *ngIf="dataFabricacao?.errors?.['dataFutura']">A data de fabricação não deve exceder a data atual.</span>
+      </div>
+
       </div>
     </div>
     <div class="modal-footer">
