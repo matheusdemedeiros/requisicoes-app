@@ -3,7 +3,7 @@ import {
   AngularFirestore,
   AngularFirestoreCollection,
 } from '@angular/fire/compat/firestore';
-import { Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 
 import { Departamento } from '../models/departamento.model';
 
@@ -35,5 +35,16 @@ export class DepartamentoService {
 
   public excluir(registro: Departamento): Promise<void> {
     return this.registros.doc(registro.id).delete();
+  }
+
+  public selecionarPorId(id: string) {
+    return this.selecionarTodos().pipe(
+      take(1),
+      map((departamentos) => {
+        return departamentos.filter(
+          (dep) => dep.id === id
+        )[0];
+      })
+    );
   }
 }

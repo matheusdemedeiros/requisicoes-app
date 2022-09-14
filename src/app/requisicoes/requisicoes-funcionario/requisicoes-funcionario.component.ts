@@ -21,8 +21,7 @@ import { RequisicaoService } from '../services/requisicao.service';
 
 @Component({
   selector: 'app-resuisicoes-funcionario',
-  templateUrl: './resuisicoes-funcionario.component.html',
-  styleUrls: ['./resuisicoes-funcionario.component.css'],
+  templateUrl: './requisicoes-funcionario.component.html',
 })
 export class ResuisicoesFuncionarioComponent implements OnInit {
   public requisicoes$: Observable<Requisicao[]>;
@@ -64,7 +63,7 @@ export class ResuisicoesFuncionarioComponent implements OnInit {
       funcionario: new FormControl(''),
       funcionarioId: new FormControl(''),
 
-      stauts: new FormControl(''),
+      status: new FormControl(''),
       ultimaAtualizacao: new FormControl(''),
       movimentacoes: new FormControl(''),
     });
@@ -74,7 +73,7 @@ export class ResuisicoesFuncionarioComponent implements OnInit {
     return this.form.get('departamentoId');
   }
   get funcionarioId(): AbstractControl | null {
-    return this.form.get('funcinarioId');
+    return this.form.get('funcionarioId');
   }
 
   get departamento(): AbstractControl | null {

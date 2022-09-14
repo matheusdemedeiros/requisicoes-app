@@ -10,7 +10,7 @@ export class Requisicao {
   funcionarioId: string;
   departamento?: Departamento;
   departamentoId: string;
-  dataAbertura: string;
+  dataAbertura: Date | any;
   equipamento?: Equipamento;
   equipamentoId?: string;
   status: string;

@@ -74,14 +74,30 @@ export class RequisicaoService {
     );
   }
 
-  public selecionarPorId(id:string):Observable<Requisicao>{
-    return this.selecionarTodos()
-    .pipe(
+  public selecionarPorId(id: string): Observable<Requisicao> {
+    return this.selecionarTodos().pipe(
       take(1),
-      map(requisicoes => {
-        return requisicoes.filter(req => req.id === id)[0];
+      map((requisicoes) => {
+        return requisicoes.filter((req) => req.id === id)[0];
       })
-    )
+    );
   }
 
+  public selecionarRequisicoesFuncionarioAtual(funcionarioId: string) {
+    return this.selecionarTodos().pipe(
+      map((requisicoes) => {
+        return requisicoes.filter((req) => req.funcionarioId === funcionarioId);
+      })
+    );
+  }
+
+  public selecionarRequisicoesPorDepartamentoId(departamentoId: string) {
+    return this.selecionarTodos().pipe(
+      map((requisicoes) => {
+        return requisicoes.filter(
+          (req) => req.departamentoId === departamentoId
+        );
+      })
+    );
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import {
   FormGroup,
   FormBuilder,
@@ -7,12 +7,10 @@ import {
   AbstractControl,
 } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { map, Observable, take } from 'rxjs';
+import { map, Observable, Subscription, take } from 'rxjs';
 import { AuthenticationService } from 'src/app/auth/services/authentication.service';
 import { Departamento } from 'src/app/departamentos/models/departamento.model';
 import { DepartamentoService } from 'src/app/departamentos/services/departamento.service';
-import { Equipamento } from 'src/app/equipamentos/models/equipamento.model';
-import { EquipamentoService } from 'src/app/equipamentos/services/equipamento.service';
 import { Funcionario } from 'src/app/funcionarios/models/funcionario.model';
 import { FuncionarioService } from 'src/app/funcionarios/services/funcionario.service';
 import { Notificador } from 'src/app/shared/notificador.service';
@@ -23,46 +21,55 @@ import { RequisicaoService } from '../services/requisicao.service';
 @Component({
   selector: 'app-requisicoes-departamento',
   templateUrl: './requisicoes-departamento.component.html',
-  styleUrls: ['./requisicoes-departamento.component.css'],
 })
-export class RequisicoesDepartamentoComponent implements OnInit {
+export class RequisicoesDepartamentoComponent implements OnInit, OnDestroy {
   public requisicoes$: Observable<Requisicao[]>;
-  public departamentos$: Observable<Departamento[]>;
-  public equipamentos$: Observable<Equipamento[]>;
-  public funcionarios$: Observable<Funcionario[]>;
   public form: FormGroup;
   public funcionarioLogado: Funcionario;
-  public qtdRequisicoesDepartamento: number;
-  public departamentoAtual: Departamento;
-  public departamentoAtualId: string;
   public requisicaoSelecionada: Requisicao;
+  public departamentoAtual: Departamento;
+
   public listaStatus: string[] = [
     'Aberta',
     'Processando',
     'Não autorizada',
     'Fechada',
   ];
+  private processoAutenticado$: Subscription;
 
   constructor(
     private fb: FormBuilder,
     private notificador: Notificador,
     private requisicaoService: RequisicaoService,
-    private departamentoService: DepartamentoService,
-    private equipamentoService: EquipamentoService,
     private funcionarioService: FuncionarioService,
     private modalService: NgbModal,
-    private authService: AuthenticationService
+    private authService: AuthenticationService,
+    private departamentoService: DepartamentoService
   ) {}
+  ngOnDestroy(): void {
+    this.processoAutenticado$.unsubscribe();
+  }
 
   ngOnInit(): void {
-    this.qtdRequisicoesDepartamento = 0;
-    this.obterDepartamentoIdAtual();
+    this.processoAutenticado$ = this.authService.usuarioLogado.subscribe(
+      (dados) => {
+        this.funcionarioService
+          .selecionarFuncionarioLogado(dados!.email!)
+          .subscribe((funcionario) => {
+            this.funcionarioLogado = funcionario;
+            this.departamentoService
+              .selecionarPorId(this.funcionarioLogado.departamentoId)
+              .subscribe((dep) => {
+                this.departamentoAtual = dep;
+              });
 
-    this.departamentos$ = this.departamentoService.selecionarTodos();
-    this.obterDepartamentoAtual();
-
-    console.log('Departamento Atual: ' + this.departamentoAtual);
-    this.equipamentos$ = this.equipamentoService.selecionarTodos();
+            this.requisicoes$ =
+              this.requisicaoService.selecionarRequisicoesPorDepartamentoId(
+                funcionario.departamentoId
+              );
+          });
+      }
+    );
 
     this.form = this.fb.group({
       id: new FormControl(''),
@@ -79,6 +86,7 @@ export class RequisicoesDepartamentoComponent implements OnInit {
       funcionarioId: new FormControl(''),
       status: new FormControl('', [Validators.required]),
       data: new FormControl('', [Validators.required]),
+      ultimaAtualizacao: new FormControl(''),
     });
   }
 
@@ -136,39 +144,6 @@ export class RequisicoesDepartamentoComponent implements OnInit {
     this.requisicaoSelecionada.ultimaAtualizacao = new Date();
   }
 
-  public obterDepartamentoAtual() {
-    this.departamentos$
-      .pipe(
-        map((departamentos) => {
-          let dep = departamentos.filter(
-            (d) => d.id === this.departamentoAtualId
-          );
-          return dep[0];
-        })
-      )
-      .subscribe((d) => (this.departamentoAtual = d));
-  }
-
-  public obterDepartamentoIdAtual() {
-    this.authService.usuarioLogado.subscribe((dados) => {
-      this.funcionarioService
-        .selecionarFuncionarioLogado(dados!.email!)
-        .subscribe((funcionario) => {
-          this.funcionarioLogado = funcionario;
-          this.departamentoAtualId = funcionario.departamentoId;
-          this.requisicoes$ = this.requisicaoService.selecionarTodos().pipe(
-            map((requisicoes) => {
-              let requisicoesDepartamentoAtual = requisicoes.filter(
-                (r) => r.departamentoId === this.departamentoAtualId
-              );
-              this.qtdRequisicoesDepartamento =
-                requisicoesDepartamentoAtual.length;
-              return requisicoesDepartamentoAtual;
-            })
-          );
-        });
-    });
-  }
   private configurarValoresPadrao(): void {
     this.form.patchValue({
       funcionario: this.funcionarioLogado,

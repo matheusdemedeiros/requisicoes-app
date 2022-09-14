@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { DetalhesComponent } from './detalhes/detalhes.component';
 import { RequisicaoComponent } from './requisicao.component';
 import { RequisicoesDepartamentoComponent } from './requisicoes-departamento/requisicoes-departamento.component';
-import { ResuisicoesFuncionarioComponent } from './resuisicoes-funcionario/resuisicoes-funcionario.component';
+import { ResuisicoesFuncionarioComponent } from './requisicoes-funcionario/requisicoes-funcionario.component';
 import { RequisicaoResolver } from './services/requisicao.resolver';
 
 const routes: Routes = [
